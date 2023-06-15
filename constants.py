@@ -1,0 +1,9 @@
+from cv2 import FONT_HERSHEY_COMPLEX_SMALL
+
+FONT = FONT_HERSHEY_COMPLEX_SMALL
+FRAME_RATE = 2
+HEIGHT = 720
+TEXT_COLOUR = (0, 0, 255)
+WIDTH = 1280
+WINDOW_NAME = "Rekognition Demo - Sentiment Analysis"
+REGION = "ap-southeast-1"
