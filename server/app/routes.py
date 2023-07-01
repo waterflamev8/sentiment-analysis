@@ -1,7 +1,6 @@
 import json
 
 from flask import request, jsonify
-import cv2
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import generate_csrf
 from flask_wtf.file import FileField, FileRequired
