@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import "../styles/global.css";
 
 import awsLogo from '../images/awsLogo.png'; 
-import { initVideo } from "../utils/videoHelper"; 
+import VideoComponent from "./videoComponent";
 
 const navBarStyles = {
     display: "flex",
@@ -42,29 +41,7 @@ const languageTextStyles = {
     fontFamily: "Roboto, sans-serif",
 };
 
-const videoStyles = {
-    position: 'fixed', 
-    width: '100%', 
-    height: 'calc(100% - 70px)', 
-    objectFit: 'cover', 
-    top: 70,
-    transform: 'scaleX(-1)' // Flip the video
-};
-
-const canvasStyles = {
-    display: 'none',
-    width: 640, 
-    height: 480
-};
-
 const IndexPage = () => {
-    const videoRef = React.useRef();
-    const canvasRef = React.useRef();
-
-    useEffect(() => {
-        initVideo(videoRef, canvasRef);
-    }, []);
-
     return (
         <div>
             <nav style={navBarStyles}>
@@ -74,8 +51,7 @@ const IndexPage = () => {
                 </div>
                 <div style={languageTextStyles}>English 🇬🇧</div>
             </nav>
-            <video ref={videoRef} autoPlay={true} style={videoStyles}></video>
-            <canvas ref={canvasRef} style={canvasStyles}></canvas>
+            <VideoComponent />
         </div>
     );
 };
