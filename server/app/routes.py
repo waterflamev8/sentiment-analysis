@@ -43,6 +43,12 @@ def process():
 
         print(process_result(rekognition_result))
 
+        result = process_result(rekognition_result)
+        result = sorted(result.items(), key=lambda x: x[1], reverse=True)
+    else:
+        print(form.errors)
+        return jsonify({"error": "Form validation failed. Please check the form data."})
+
         # success, buffer = cv2.imencode(".jpeg", image)
 
         # # Error handling
@@ -54,4 +60,4 @@ def process():
 
 
 
-    return jsonify({"greeting": "hello"})
+    return jsonify({"result": result})
