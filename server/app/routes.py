@@ -25,13 +25,6 @@ def generate_csrf_token():
 
 @app.route("/process", methods=["POST"])
 def process():
-    # buffer = request.json["buffer"]
-
-    # img_bytes = bytearray(buffer)
-    # rekognition_result = client.detect_faces(
-    #     Image={"Bytes": img_bytes}, Attributes=["EMOTIONS"]
-    # )
-    # return process_result(rekognition_result)
     form = createForm()
 
     if form.validate():
