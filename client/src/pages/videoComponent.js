@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { initVideo } from "../utils/videoHelper";
 
+
 const videoStyles = {
     position: 'fixed', 
     width: '100%', 

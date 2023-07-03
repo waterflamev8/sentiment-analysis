@@ -4,6 +4,7 @@ import "../styles/global.css";
 import awsLogo from '../images/awsLogo.png'; 
 import VideoComponent from "./videoComponent";
 
+
 const navBarStyles = {
     display: "flex",
     justifyContent: "space-between",
