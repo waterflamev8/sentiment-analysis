@@ -1,5 +1,3 @@
-import axios from "axios";
-
 function dataURLToBlob(dataURL) 
 {
     const BASE64_MARKER = ';base64,';
@@ -30,9 +28,12 @@ export async function initVideo(videoRef, canvasRef, formRef) {
             .then(function(stream) {
                 videoRef.current.srcObject = stream;
 
-                setInterval(async () => {
+                console.log ("A")
+
+                videoRef.current.onloadeddata = function() {    
                     if(videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) 
                     {
+                        console.log ("B")
                         fetch('http://127.0.0.1:3000/generate_csrf_token')
                             .then((res) => {
                                 return res.json();
@@ -46,8 +47,13 @@ export async function initVideo(videoRef, canvasRef, formRef) {
                                 formData.append('image', imageBlob, 'image.jpg');
                                 formData.append('csrf_token', csrf_token);
 
+                                console.log (csrf_token)
+
                                 return fetch('http://127.0.0.1:3000/process', {
                                     method: 'POST',
+                                    // headers: {
+                                    //     'X-CSRFToken': csrf_token
+                                    // },
                                     body: formData
                                 });
                             })
@@ -60,8 +66,8 @@ export async function initVideo(videoRef, canvasRef, formRef) {
                             .catch((err) => {
                                 console.error(err);
                             });
-                    }
-                }, 1000);             
+                    }     
+                }
             })
             .catch(function(err) {
                 console.log("An error occurred: " + err);

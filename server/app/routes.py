@@ -20,12 +20,19 @@ def index():
 
 @app.route("/generate_csrf_token")
 def generate_csrf_token():
-    return jsonify({"csrf_token": generate_csrf()})
+    token = generate_csrf()
+    print (token)
+    return jsonify({"csrf_token": token})
 
 
 @app.route("/process", methods=["POST"])
 def process():
     form = createForm()
+
+    print (form)
+
+    print(form.image.data)
+    print(form.csrf_token.data)
 
     if form.validate():
         image_bytes = form.image.data.read()
