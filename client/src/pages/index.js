@@ -1,9 +1,10 @@
 import React from "react";
 import "../styles/global.css";
 
-import awsLogo from '../images/awsLogo.png'; 
-import VideoComponent from "./videoComponent";
-
+import awsLogo from "../images/awsLogo.png";
+import VideoComponent from "../components/videoComponent";
+import CardComponent from "../components/cardComponent";
+import EmotionsComponent from "../components/EmotionsComponent";
 
 const navBarStyles = {
     display: "flex",
@@ -34,12 +35,20 @@ const logoTextStyles = {
     fontFamily: "Roboto, sans-serif",
 };
 
-const languageTextStyles = {
-    fontSize: 25,
-    color: "var(--text)",
-    fontWeight: 400,
-    marginRight: 10,
-    fontFamily: "Roboto, sans-serif",
+const contentContainerStyles = {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: 40,
+};
+
+const DUMMY_DATA = {
+    result: [
+        ["HAPPY", 3],
+        ["SURPRISED", 2],
+        ["CONFUSED", 2],
+        ["ANGRY", 1],
+        ["SAD", 1],
+    ],
 };
 
 const IndexPage = () => {
@@ -47,12 +56,18 @@ const IndexPage = () => {
         <div>
             <nav style={navBarStyles}>
                 <div style={logoContainerStyles}>
-                    <img src={awsLogo} style={awsLogoStyles} alt="AWS Logo" /> 
+                    <img src={awsLogo} style={awsLogoStyles} alt="AWS Logo" />
                     <span style={logoTextStyles}>Amazon SkillsFuture 2023</span>
                 </div>
-                <div style={languageTextStyles}>English 🇬🇧</div>
             </nav>
-            <VideoComponent />
+            <div style={contentContainerStyles}>
+                <CardComponent header="Video" width="70%">
+                    <VideoComponent />
+                </CardComponent>
+                <CardComponent header="Emotions" width="20%">
+                    <EmotionsComponent data={DUMMY_DATA} />
+                </CardComponent>
+            </div>
         </div>
     );
 };

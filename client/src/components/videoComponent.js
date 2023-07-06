@@ -1,20 +1,15 @@
 import React, { useRef, useEffect } from "react";
 import { initVideo } from "../utils/videoHelper";
 
-
 const videoStyles = {
-    position: 'fixed', 
-    width: '100%', 
-    height: 'calc(100% - 70px)', 
-    objectFit: 'cover', 
-    top: 70,
-    transform: 'scaleX(-1)' // Flip the video
+    width: '100%',
+    height: '100%',
+    // objectFit: "cover",
+    transform: "scaleX(-1)", // Flip the video
 };
 
 const canvasStyles = {
-    display: 'none',
-    width: 640, 
-    height: 480
+    display: "none",
 };
 
 const VideoComponent = () => {
@@ -31,8 +26,13 @@ const VideoComponent = () => {
             <video ref={videoRef} autoPlay={true} style={videoStyles} />
             <canvas ref={canvasRef} style={canvasStyles} />
 
-            <form ref={formRef} style={{ display: 'none' }}>
-                <input type="hidden" id="csrf_token" name="csrf_token" value="" />
+            <form ref={formRef} style={{ display: "none" }}>
+                <input
+                    type="hidden"
+                    id="csrf_token"
+                    name="csrf_token"
+                    value=""
+                />
             </form>
         </div>
     );

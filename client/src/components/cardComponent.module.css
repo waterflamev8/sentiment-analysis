@@ -1,0 +1,36 @@
+.cardStyles {
+    background: var(--panel);
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 0;
+    margin: 20px;
+    transition: all 0.3s ease;
+    height: auto; 
+    min-height: 100px;
+}
+
+.titleStyles {
+    position: relative;
+    background-color: var(--header);
+    width: 100%;
+    height: 80px;
+    margin: 0;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: var(--text);
+    font-weight: bold;
+}
+
+.titleStyles::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--line);
+    transition: all 0.3s ease;
+    position: absolute;
+    bottom: 0;
+}
