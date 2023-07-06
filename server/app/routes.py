@@ -13,26 +13,19 @@ class createForm(FlaskForm):
     image = FileField("image", validators=[FileRequired()])
 
 
-@app.route("/")
+@app.route("/api")
 def index():
     return "<h1>Hello world</h1>"
 
 
-@app.route("/generate_csrf_token")
+@app.route("/api/generate_csrf_token")
 def generate_csrf_token():
-    token = generate_csrf()
-    print (token)
-    return jsonify({"csrf_token": token})
+    return jsonify({"csrf_token": generate_csrf()})
 
 
-@app.route("/process", methods=["POST"])
+@app.route("/api/process", methods=["POST"])
 def process():
     form = createForm()
-
-    print (form)
-
-    print(form.image.data)
-    print(form.csrf_token.data)
 
     if form.validate():
         image_bytes = form.image.data.read()
@@ -45,19 +38,9 @@ def process():
 
         result = process_result(rekognition_result)
         result = sorted(result.items(), key=lambda x: x[1], reverse=True)
-    else:
-        print(form.errors)
-        return jsonify({"error": "Form validation failed. Please check the form data."})
 
-        # success, buffer = cv2.imencode(".jpeg", image)
+        return jsonify({"result": result})
 
-        # # Error handling
-        # if not success:
-        # 	print("Error")
-
-        # img_bytes = bytearray(image)
-        # print(img_bytes)
-
-
-
-    return jsonify({"result": result})
+    # Error handling
+    print(form.errors)
+    return jsonify({"error": "Form validation failed. Please check the form data."})

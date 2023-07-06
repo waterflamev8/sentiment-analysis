@@ -7,4 +7,8 @@ module.exports = {
     siteUrl: `https://www.yourdomain.tld`,
   },
   plugins: [],
+  proxy: {
+    prefix: '/api',
+    url: 'http://localhost:3000'
+  }
 }

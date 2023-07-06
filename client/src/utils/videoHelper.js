@@ -1,3 +1,5 @@
+import axios from "axios"
+
 function dataURLToBlob(dataURL) 
 {
     const BASE64_MARKER = ';base64,';
@@ -22,52 +24,43 @@ function dataURLToBlob(dataURL)
     return new Blob([uInt8Array], { type: contentType });
 }
 
-export async function initVideo(videoRef, canvasRef, formRef) {
+export async function sendFrame(videoRef, canvasRef) {
+    if(videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
+        canvasRef.current.getContext('2d').drawImage(videoRef.current, 0, 0, 640, 480);
+        const frame = canvasRef.current.toDataURL('image/jpeg', 1.0);
+        const imageBlob = dataURLToBlob(frame); // Convert the frame to a Blob
+
+        try {
+            const csrfRes = await axios.get("http://localhost:8000/api/generate_csrf_token");
+            const csrfToken = csrfRes.data.csrf_token;
+
+            const formData = new FormData();
+            formData.append('image', imageBlob, 'image.jpeg');
+
+            const response = await axios.post("http://localhost:8000/api/process", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'X-CSRFToken': csrfToken
+                },
+                withCredentials: true
+            });
+
+            console.log(response.data);
+        } catch(error) {
+            console.error("Error: ", error);
+        }
+    }
+}
+
+export async function initVideo(videoRef, canvasRef) {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function(stream) {
                 videoRef.current.srcObject = stream;
 
-                console.log ("A")
-
-                videoRef.current.onloadeddata = function() {    
-                    if(videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) 
-                    {
-                        console.log ("B")
-                        fetch('http://127.0.0.1:3000/generate_csrf_token')
-                            .then((res) => {
-                                return res.json();
-                            })
-                            .then(({ csrf_token }) => {
-                                canvasRef.current.getContext('2d').drawImage(videoRef.current, 0, 0, 640, 480);
-                                const frame = canvasRef.current.toDataURL('image/jpeg', 1.0);
-                                const imageBlob = dataURLToBlob(frame); // Convert the frame to a Blob
-
-                                const formData = new FormData();
-                                formData.append('image', imageBlob, 'image.jpg');
-                                formData.append('csrf_token', csrf_token);
-
-                                console.log (csrf_token)
-
-                                return fetch('http://127.0.0.1:3000/process', {
-                                    method: 'POST',
-                                    // headers: {
-                                    //     'X-CSRFToken': csrf_token
-                                    // },
-                                    body: formData
-                                });
-                            })
-                            .then((res) => {
-                                return res.json();
-                            })
-                            .then((data) => {
-                                console.log(data);
-                            })
-                            .catch((err) => {
-                                console.error(err);
-                            });
-                    }     
-                }
+                setInterval(() => {
+                    sendFrame(videoRef, canvasRef);
+                }, 1000);             
             })
             .catch(function(err) {
                 console.log("An error occurred: " + err);
