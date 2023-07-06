@@ -26,7 +26,10 @@ function dataURLToBlob(dataURL)
 
 export async function sendFrame(videoRef, canvasRef) {
     if(videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
-        canvasRef.current.getContext('2d').drawImage(videoRef.current, 0, 0, 640, 480);
+        canvasRef.current.width = videoRef.current.videoWidth;
+        canvasRef.current.height = videoRef.current.videoHeight;
+
+        canvasRef.current.getContext('2d').drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
         const frame = canvasRef.current.toDataURL('image/jpeg', 1.0);
         const imageBlob = dataURLToBlob(frame); // Convert the frame to a Blob
 

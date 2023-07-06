@@ -8,6 +8,7 @@ from flask_wtf.file import FileField, FileRequired
 from app import app, client
 from app.utils import process_result
 
+import base64
 
 class createForm(FlaskForm):
     image = FileField("image", validators=[FileRequired()])
@@ -30,8 +31,13 @@ def process():
     if form.validate():
         image_bytes = form.image.data.read()
 
+        # Convert to base64
+        base64_image = base64.b64encode(image_bytes).decode('utf-8')
+
+        print(f"Base64 image data: {base64_image}")
+
         rekognition_result = client.detect_faces(
-        	Image={"Bytes": image_bytes}, Attributes=["EMOTIONS"]
+            Image={"Bytes": image_bytes}, Attributes=["EMOTIONS"]
         )
 
         print(process_result(rekognition_result))
