@@ -1,4 +1,4 @@
-# Sentiment Analysis using AI on Vivo City Event 🎉🧠
+# Sentiment Analysis
 
 ## Project Overview
 
@@ -10,11 +10,11 @@ AWS Rekognition processes the video feed and identifies various emotions from th
 
 ## Project Features
 
-- **Real-time Sentiment Analysis**: Our project uses AWS Rekognition to analyze the video feed and identify various emotions in real-time. 🕵️‍♀️📹
-- **Interactive Web Interface**: The web interface built with Gatsby React displays the video feed and the processed emotions simultaneously. This provides an interactive visual feedback for the users. 🖥️💬
-- **AWS Integration**: The project showcases effective utilization of various AWS services, mainly AWS Rekognition. ☁️🔧
-- **Backend Processing**: We have used Flask for backend processing which communicates with AWS Rekognition service and the frontend. 🔄💻
-- **Scalability**: The system is designed to process the emotions of a group of people simultaneously, demonstrating its scalability. 🧑‍🤝‍🧑📈
+- **Real-time Sentiment Analysis**: Our project uses AWS Rekognition to analyze the video feed and identify various emotions in real-time.
+- **Interactive Web Interface**: The web interface built with Gatsby React displays the video feed and the processed emotions simultaneously. This provides an interactive visual feedback for the users.
+- **AWS Integration**: The project showcases effective utilization of various AWS services, mainly AWS Rekognition.
+- **Backend Processing**: We have used Flask for backend processing which communicates with AWS Rekognition service and the frontend.
+- **Scalability**: The system is designed to process the emotions of a group of people simultaneously, demonstrating its scalability.
 
 ## How It Works
 
@@ -22,7 +22,7 @@ AWS Rekognition processes the video feed and identifies various emotions from th
 2. This feed is processed by AWS Rekognition to identify different emotions based on facial expressions.
 3. The identified emotions are then returned to the Flask backend which processes the data.
 4. The backend then communicates with the React frontend to update the displayed emotions in real-time.
-5. As a result, the users can see their identified emotions updated live on the web interface. 🔄💬
+5. As a result, the users can see their identified emotions updated live on the web interface.
 
 ## Getting Started
 
@@ -30,4 +30,4 @@ To use this project, you will need an AWS account to access AWS Rekognition serv
 
 ## License
 
-This project is licensed under the terms of the MIT license. 📝
+This project is licensed under the terms of the [MIT license](LICENSE).
