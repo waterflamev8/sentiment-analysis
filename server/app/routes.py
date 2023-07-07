@@ -34,8 +34,6 @@ def process():
         # Convert to base64
         base64_image = base64.b64encode(image_bytes).decode('utf-8')
 
-        print(f"Base64 image data: {base64_image}")
-
         rekognition_result = client.detect_faces(
             Image={"Bytes": image_bytes}, Attributes=["EMOTIONS"]
         )
