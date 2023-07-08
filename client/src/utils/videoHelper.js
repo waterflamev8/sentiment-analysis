@@ -24,7 +24,7 @@ function dataURLToBlob(dataURL)
     return new Blob([uInt8Array], { type: contentType });
 }
 
-export async function sendFrame(videoRef, canvasRef) {
+export async function sendFrame(videoRef, canvasRef, setEmotionData) {
     if(videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
         canvasRef.current.width = videoRef.current.videoWidth;
         canvasRef.current.height = videoRef.current.videoHeight;
@@ -48,22 +48,22 @@ export async function sendFrame(videoRef, canvasRef) {
                 withCredentials: true
             });
 
-            console.log(response.data);
+            setEmotionData(response.data.result);
         } catch(error) {
             console.error("Error: ", error);
         }
     }
 }
 
-export async function initVideo(videoRef, canvasRef) {
+export async function initVideo(videoRef, canvasRef, formRef, setEmotionData) {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function(stream) {
                 videoRef.current.srcObject = stream;
 
                 setInterval(() => {
-                    sendFrame(videoRef, canvasRef);
-                }, 1000);             
+                    sendFrame(videoRef, canvasRef, setEmotionData);
+                }, 500);             
             })
             .catch(function(err) {
                 console.log("An error occurred: " + err);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/global.css";
 
 import awsLogo from "../images/awsLogo.png";
@@ -41,17 +41,9 @@ const contentContainerStyles = {
     padding: 40,
 };
 
-const DUMMY_DATA = {
-    result: [
-        ["HAPPY", 3],
-        ["SURPRISED", 2],
-        ["CONFUSED", 2],
-        ["ANGRY", 1],
-        ["SAD", 1],
-    ],
-};
-
 const IndexPage = () => {
+    const [emotionData, setEmotionData] = useState([]);
+
     return (
         <div>
             <nav style={navBarStyles}>
@@ -62,10 +54,10 @@ const IndexPage = () => {
             </nav>
             <div style={contentContainerStyles}>
                 <CardComponent header="Video" width="70%">
-                    <VideoComponent />
+                    <VideoComponent setEmotionData={setEmotionData} />
                 </CardComponent>
                 <CardComponent header="Emotions" width="20%">
-                    <EmotionsComponent data={DUMMY_DATA} />
+                    <EmotionsComponent data={emotionData} />
                 </CardComponent>
             </div>
         </div>

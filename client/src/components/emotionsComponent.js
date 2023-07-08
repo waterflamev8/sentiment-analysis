@@ -10,13 +10,13 @@ const sentimentStyles = {
 };
 
 const emojiStyles = {
-    fontSize: 30,
+    fontSize: 50,
 };
 
 const emojiMapping = {
-    'HAPPY': '😀',
+    'HAPPY': '🙂',
     'SAD': '😢',
-    'ANGRY': '😠',
+    'ANGRY': '😡',
     'CONFUSED': '😕',
     'DISGUSTED': '🤮',
     'SURPRISED': '😮',
@@ -28,11 +28,11 @@ const emojiMapping = {
 const EmotionsComponent = ({ data }) => {
     return (
         <div>
-            {data.result.map(([sentiment, value], index) => (
+            { data.map(([sentiment, value], index) => (
                 <div key={index} style={sentimentStyles}>
                     <div style={emojiStyles}>{emojiMapping[sentiment]} x{value}</div>
                 </div>
-            ))}
+            )) }
         </div>
     );
 };
