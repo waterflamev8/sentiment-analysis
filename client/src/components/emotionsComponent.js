@@ -25,10 +25,15 @@ const emojiMapping = {
     'FEAR': '😱'
 };  
 
-const EmotionsComponent = ({ data }) => {
+const EmotionsComponent = (props) => 
+{
+    const { data } = props;
+
+    // console.log ("data", data)
+
     return (
         <div>
-            { data.map(([sentiment, value], index) => (
+            { data.result && data.result.map(([sentiment, value], index) => (
                 <div key={index} style={sentimentStyles}>
                     <div style={emojiStyles}>{emojiMapping[sentiment]} x{value}</div>
                 </div>

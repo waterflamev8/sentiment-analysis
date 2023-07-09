@@ -48,7 +48,7 @@ export async function sendFrame(videoRef, canvasRef, setEmotionData) {
                 withCredentials: true
             });
 
-            setEmotionData(response.data.result);
+            setEmotionData(response.data);
         } catch(error) {
             console.error("Error: ", error);
         }
