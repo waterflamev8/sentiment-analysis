@@ -38,12 +38,18 @@ def process():
             Image={"Bytes": image_bytes}, Attributes=["EMOTIONS"]
         )
 
-        print(process_result(rekognition_result))
+        # print(process_result(rekognition_result))
 
-        result = process_result(rekognition_result)
+        result, avg_score = process_result(rekognition_result)
         result = sorted(result.items(), key=lambda x: x[1], reverse=True)
 
-        return jsonify({"result": result})
+        big_emotion = None
+        top_emotion = list(avg_score.keys())[0]  # Top emotion will always be first element
+
+        if avg_score[top_emotion] > 80 and len(rekognition_result["FaceDetails"]) > 2:  # More than 3 faces
+            big_emotion = top_emotion
+
+        return jsonify({"result": result, "big_emotion": big_emotion})
 
     # Error handling
     print(form.errors)

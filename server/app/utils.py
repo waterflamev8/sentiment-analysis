@@ -1,11 +1,16 @@
-def find_emotion(emotions):
+def find_emotion(emotions, emotionScore):
     num = {"Confidence": 0.0, "Type": None}
 
     for emotion in emotions:
+        if emotion["Type"] not in emotionScore:
+            emotionScore[emotion["Type"]] = 0
+
+        emotionScore[emotion["Type"]] += float(emotion["Confidence"])
+
         if emotion["Confidence"] > num["Confidence"]:
             num = emotion
 
-    return num
+    return (num, emotionScore)
 
 
 # def find_general_emotion(emotions, total):
@@ -29,9 +34,11 @@ def find_emotion(emotions):
 def process_result(result):
     faces = result["FaceDetails"]
     emotions = {}
+    overallEmotionScore = {}  # Maps emotion to total "percentage"
+    averageEmotionScore = {}
 
     for face in faces:
-        emotion_map = find_emotion(face["Emotions"])
+        emotion_map, overallEmotionScore = find_emotion(face["Emotions"], overallEmotionScore)
         emotion = emotion_map["Type"]
 
         # Initialise emotion in dictionary
@@ -40,4 +47,7 @@ def process_result(result):
 
         emotions[emotion] += 1
 
-    return emotions
+    for emotion in overallEmotionScore:
+        averageEmotionScore[emotion] = overallEmotionScore[emotion] / len(faces)
+
+    return (emotions, averageEmotionScore)
