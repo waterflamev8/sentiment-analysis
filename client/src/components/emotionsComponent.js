@@ -29,8 +29,6 @@ const EmotionsComponent = (props) =>
 {
     const { data } = props;
 
-    // console.log ("data", data)
-
     return (
         <div>
             { data.result && data.result.map(([sentiment, value], index) => (

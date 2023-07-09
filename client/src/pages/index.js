@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from 'framer-motion';
 import Snowfall from 'react-snowfall'
 import "../styles/global.css";
 
@@ -46,10 +47,28 @@ const logoTextStyles = {
     fontFamily: "Roboto, sans-serif",
 };
 
+const cooldownTextStyles = {
+    color: "var(--text)", 
+    fontSize: 25, 
+    marginRight: 10 
+}
+
 const contentContainerStyles = {
     display: "flex",
     justifyContent: "space-between",
     padding: 40,
+};
+
+const fadeInOut = {
+    hidden: { opacity: 0 },
+    show: {
+        opacity: 1,
+        transition: { duration: 0.2 }
+    },
+    exit: {
+        opacity: 0,
+        transition: { duration: 0.2 }
+    }
 };
 
 const IndexPage = () => {
@@ -58,6 +77,8 @@ const IndexPage = () => {
     const [canTriggerBigEmoji, setCanTriggerBigEmoji] = useState(true);
     const [showingBigEmoji, setShowingBigEmoji] = useState(false);
     const [bigEmojiImage, setBigEmojiImage] = useState(new Image());
+
+    const [cooldown, setCooldown] = useState(0);
 
     useEffect(() => {
         TriggerBigEmoji();
@@ -83,9 +104,17 @@ const IndexPage = () => {
             setTimeout(() => { setShowingBigEmoji(false); }, 5000);
     
             setCanTriggerBigEmoji(false);
+            setCooldown(10);
             setTimeout(() => { setCanTriggerBigEmoji(true); }, 10000);
         }
     }
+
+    useEffect(() => {
+        if (cooldown > 0) {
+            const id = setInterval(() => setCooldown(cooldown - 1), 1000);
+            return () => clearInterval(id);
+        }
+      }, [cooldown]);
 
     return (
         <div>
@@ -93,6 +122,9 @@ const IndexPage = () => {
                 <div style={logoContainerStyles}>
                     <img src={awsLogo} style={awsLogoStyles} alt="AWS Logo" />
                     <span style={logoTextStyles}>Amazon SkillsFuture 2023</span>
+                </div>
+                <div>
+                    <span style={cooldownTextStyles}>{cooldown > 0 ? `Cooldown: ${cooldown}` : "READY!"}</span>
                 </div>
             </nav>
             <div style={contentContainerStyles}>
@@ -103,20 +135,32 @@ const IndexPage = () => {
                     <EmotionsComponent data={emotionData} />
                 </CardComponent>
             </div>
-            { showingBigEmoji && <Snowfall
-                color="white"
-                style={{ 
-                    position: 'fixed',
-                    width: '100vw',
-                    height: '100vh'
-                }}
-                radius={[30, 500]}
-                rotationSpeed={[-1, 1]}
-                speed={[10, 20]}
-                wind={[-1, 1]}
-                snowflakeCount={20}
-                images={[bigEmojiImage]} 
-            /> }
+            <AnimatePresence>
+                {showingBigEmoji && (
+                    <motion.div
+                        variants={fadeInOut}
+                        initial="hidden"
+                        animate="show"
+                        exit="exit"
+                    >
+                        <Snowfall
+                            color="white"
+                            style={{ 
+                                position: 'fixed',
+                                width: '100vw',
+                                height: '100vh'
+                            }}
+                            radius={[50, 400]}
+                            rotationSpeed={[-1, 1]}
+                            speed={[20, 40]}
+                            wind={[-0.5, 2]}
+                            snowflakeCount={20}
+                            images={[bigEmojiImage]} 
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
         </div>
     );
 };
