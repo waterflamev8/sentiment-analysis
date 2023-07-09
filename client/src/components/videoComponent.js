@@ -3,9 +3,11 @@ import { initVideo } from "../utils/videoHelper";
 
 const videoStyles = {
     width: '100%',
-    height: '100%',
-    // objectFit: "cover",
+    height: '520px',
+    objectFit: "cover",
+    borderRadius: 10,
     transform: "scaleX(-1)", // Flip the video
+    // vertically align with parent div
 };
 
 const canvasStyles = {
@@ -23,6 +25,7 @@ const VideoComponent = ({ setEmotionData }) => {
 
     return (
         <div>
+            {/* width of video should be 100% */}
             <video ref={videoRef} autoPlay={true} style={videoStyles} />
             <canvas ref={canvasRef} style={canvasStyles} />
 
