@@ -128,10 +128,10 @@ const IndexPage = () => {
                 </div>
             </nav>
             <div style={contentContainerStyles}>
-                <CardComponent header="Video" width="70%">
+                <CardComponent header="Video" width="75%">
                     <VideoComponent setEmotionData={setEmotionData} />
                 </CardComponent>
-                <CardComponent header="Emotions" width="20%">
+                <CardComponent header="Emotions" width="25%">
                     <EmotionsComponent data={emotionData} />
                 </CardComponent>
             </div>
