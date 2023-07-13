@@ -56,8 +56,15 @@ def process():
         big_emotion = None
         top_emotion = list(avg_score.keys())[0]  # Top emotion will always be first element
 
-        if avg_score[top_emotion] > 90 and len(rekognition_result["FaceDetails"]) > 0:  # TODO: put back to 2
-            big_emotion = top_emotion
+        if len(rekognition_result["FaceDetails"]) > 1:
+            if top_emotion == "HAPPY" and avg_score[top_emotion] > 96:  
+                big_emotion = top_emotion
+            elif top_emotion == "SAD" and avg_score[top_emotion] > 75:
+                big_emotion = top_emotion
+            elif top_emotion == "FEAR" and avg_score[top_emotion] > 50:
+                big_emotion = top_emotion
+            elif avg_score[top_emotion] > 50:
+                big_emotion = top_emotion
 
         return jsonify({"result": result, "big_emotion": big_emotion})
 

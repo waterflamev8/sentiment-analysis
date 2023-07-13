@@ -121,7 +121,7 @@ const IndexPage = () => {
                 newImage.src = getImage(emotionData);
     
                 setCooldown(12);
-                setTimeout(() => { setCanTriggerBigEmoji(true); }, 12000);
+                setTimeout(() => { setCanTriggerBigEmoji(true); }, 15000);
             }
     
             triggerBigEmoji();
