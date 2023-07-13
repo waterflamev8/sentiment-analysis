@@ -13,12 +13,12 @@ const canvasStyles = {
     display: "none",
 };
 
-const VideoComponent = ({ setEmotionData, setBigEmojiFrame }) => {
+const VideoComponent = ({ setEmotionData, setBigEmojiFrame, canTriggerBigEmoji }) => {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
 
     useEffect(() => {
-        initVideo(videoRef, canvasRef, setEmotionData, setBigEmojiFrame);
+        initVideo(videoRef, canvasRef, setEmotionData, setBigEmojiFrame, canTriggerBigEmoji);
     }, []);
 
     return (

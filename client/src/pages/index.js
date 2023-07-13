@@ -66,11 +66,11 @@ const fadeInOut = {
     hidden: { opacity: 0 },
     show: {
         opacity: 1,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.3 }
     },
     exit: {
         opacity: 0,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.3 }
     }
 };
 
@@ -114,8 +114,8 @@ const IndexPage = () => {
     
                 newImage.src = getImage(emotionData);
     
-                setCooldown(10);
-                setTimeout(() => { setCanTriggerBigEmoji(true); }, 10000);
+                setCooldown(12);
+                setTimeout(() => { setCanTriggerBigEmoji(true); }, 12000);
             }
     
             triggerBigEmoji();
@@ -130,34 +130,51 @@ const IndexPage = () => {
       }, [cooldown]);
 
     return (
-        <div>
-            <AnimatePresence>
-                {showingBigEmoji && (
-                    <motion.div
-                        variants={fadeInOut}
-                        initial="hidden"
-                        animate="show"
-                        exit="exit"
-                    >
-                        <Snowfall
-                            color="white"
-                            style={{ 
-                                position: 'fixed',
-                                width: '100vw',
-                                height: '100vh',
-                                zIndex: 100,
-                            }}
-                            radius={[50, 400]}
-                            rotationSpeed={[-1, 1]}
-                            speed={[20, 40]}
-                            wind={[-0.5, 2]}
-                            snowflakeCount={20}
-                            images={[bigEmojiImage]} 
-                        />
-                    </motion.div>
-                )}
-                { !canTriggerBigEmoji && <BigEmojiPanel frameImage={bigEmojiFrame} qrCodeImage={qrCodeImage} timer={cooldown} /> }
-            </AnimatePresence>
+        <div style={{position: "relative"}}>
+              <AnimatePresence>
+            {showingBigEmoji && (
+                <motion.div
+                    style={{position: "absolute", zIndex: 2}}
+                    variants={fadeInOut}
+                    initial="hidden"
+                    animate="show"
+                    exit="exit"
+                >
+                    <Snowfall
+                        color="white"
+                        style={{ 
+                            position: 'fixed',
+                            width: '100vw',
+                            height: '100vh',
+                        }}
+                        radius={[50, 400]}
+                        rotationSpeed={[-1, 1]}
+                        speed={[20, 40]}
+                        wind={[-0.5, 2]}
+                        snowflakeCount={20}
+                        images={[bigEmojiImage]} 
+                    />
+                </motion.div>
+            )}
+        </AnimatePresence>
+        
+        <AnimatePresence>
+            { !canTriggerBigEmoji && ( 
+                <motion.div
+                    style={{position: "absolute", zIndex: 1}}
+                    variants={fadeInOut}
+                    initial="hidden"
+                    animate="show"
+                    exit="exit"
+                >
+                    <BigEmojiPanel
+                        frameImage={bigEmojiFrame} 
+                        qrCodeImage={qrCodeImage} 
+                        timer={cooldown} 
+                    />
+                </motion.div>
+            )}
+        </AnimatePresence>
 
             <nav style={navBarStyles}>
                 <div style={logoContainerStyles}>
@@ -170,7 +187,7 @@ const IndexPage = () => {
             </nav>
             <div style={contentContainerStyles}>
                 <CardComponent header="Video" width="75%">
-                    <VideoComponent setEmotionData={setEmotionData} setBigEmojiFrame={setBigEmojiFrame} />
+                    <VideoComponent setEmotionData={setEmotionData} setBigEmojiFrame={setBigEmojiFrame} canTriggerBigEmoji={canTriggerBigEmoji} />
                 </CardComponent>
                 <CardComponent header="Emotions" width="25%">
                     <EmotionsComponent data={emotionData} />

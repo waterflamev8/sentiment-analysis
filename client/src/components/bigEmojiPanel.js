@@ -13,8 +13,7 @@ const BigEmojiPanel = ({ frameImage, qrCodeImage, timer }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: 5,
-            // flex direction vertical
+            // zIndex: 5,
             flexDirection: "column",
         },
         content: {
@@ -32,7 +31,6 @@ const BigEmojiPanel = ({ frameImage, qrCodeImage, timer }) => {
         },
         qrCodeImage: {
             width: '100%',
-            // make it a square
             height: '520px',
             objectFit: "cover",
 

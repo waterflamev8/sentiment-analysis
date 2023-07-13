@@ -1,7 +1,7 @@
 import axios from "axios"
 import { dataURLToBlob } from "../api/imageFuncs";
 
-export async function sendFrame(videoRef, canvasRef, setEmotionData, setBigEmojiFrame) {
+export async function sendFrame(videoRef, canvasRef, setEmotionData, setBigEmojiFrame, canTriggerBigEmoji) {
     if(videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
         canvasRef.current.width = videoRef.current.videoWidth;
         canvasRef.current.height = videoRef.current.videoHeight;
@@ -29,7 +29,7 @@ export async function sendFrame(videoRef, canvasRef, setEmotionData, setBigEmoji
 
             const hasBigEmotion = response.data.big_emotion && response.data.big_emotion !== "CALM";
 
-            if (hasBigEmotion) 
+            if (hasBigEmotion && canTriggerBigEmoji) 
             {
                 const frame = canvasRef.current.toDataURL('image/jpeg', 1.0);
                 setBigEmojiFrame(frame); 
@@ -40,14 +40,14 @@ export async function sendFrame(videoRef, canvasRef, setEmotionData, setBigEmoji
     }
 }
 
-export async function initVideo(videoRef, canvasRef, setEmotionData, setBigEmojiFrame) {
+export async function initVideo(videoRef, canvasRef, setEmotionData, setBigEmojiFrame, canTriggerBigEmoji) {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function(stream) {
                 videoRef.current.srcObject = stream;
 
                 setInterval(() => {
-                    sendFrame(videoRef, canvasRef, setEmotionData, setBigEmojiFrame);
+                    sendFrame(videoRef, canvasRef, setEmotionData, setBigEmojiFrame, canTriggerBigEmoji);
                 }, 500);
             })
             .catch(function(err) {
