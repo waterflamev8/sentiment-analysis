@@ -234,24 +234,27 @@ const getImage = (emotionData) =>
     }
 }
 
-export async function getQrCode(frame) {
-    const imageBlob = dataURLToBlob(frame); // Convert the frame to a Blob
-
-    try {
+export function getQrCode(frame) {
+    return new Promise((resolve, reject) => 
+    {
+        const imageBlob = dataURLToBlob(frame); // Convert the frame to a Blob
         const reader = new FileReader();
         reader.readAsDataURL(imageBlob);
         reader.onloadend = async function() {
             const base64data = reader.result;
 
-            const response = await axios.post("http://localhost:3000/api/generate_qr_code", { frame: base64data }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            try {
+                const response = await axios.post("http://localhost:3000/generate_qr_code", { frame: base64data }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-            return response.data.image; 
+                resolve(response.data.image); 
+            } catch(error) {
+                console.error("Error: ", error);
+                reject(error);
+            }
         }
-    } catch(error) {
-        console.error("Error: ", error);
-    }
+    });
 }

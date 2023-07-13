@@ -44,6 +44,9 @@ const BigEmojiPanel = ({ frameImage, qrCodeImage, timer }) => {
         }
     };
 
+    console.log ("LOOK HERE")
+    console.log (qrCodeImage)
+
     return (
         <div style={styles.panel}>
             <p style={styles.cooldownTextStyles}>Counting: {timer}</p>
