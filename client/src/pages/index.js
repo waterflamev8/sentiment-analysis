@@ -21,6 +21,10 @@ import sadEmoji from "../images/sadEmoji.svg";
 import surprisedEmoji from "../images/surprisedEmoji.svg";
 import unknownEmoji from "../images/unknownEmoji.svg";
 
+const containerStyles = {
+    position: "relative",
+}
+
 const navBarStyles = {
     display: "flex",
     justifyContent: "space-between",
@@ -66,11 +70,11 @@ const fadeInOut = {
     hidden: { opacity: 0 },
     show: {
         opacity: 1,
-        transition: { duration: 0.3 }
+        transition: { duration: 0.2 }
     },
     exit: {
         opacity: 0,
-        transition: { duration: 0.3 }
+        transition: { duration: 0.2 }
     }
 };
 
@@ -108,8 +112,10 @@ const IndexPage = () => {
     
                 newImage.onload = () => {
                     setBigEmojiImage(newImage);
-                    setShowingBigEmoji(true);
-                    setTimeout(() => { setShowingBigEmoji(false); }, 5000);
+                    setTimeout(() => { 
+                        setShowingBigEmoji(true);
+                        setTimeout(() => { setShowingBigEmoji(false); }, 3000);
+                    }, 500);
                 }
     
                 newImage.src = getImage(emotionData);
@@ -130,7 +136,7 @@ const IndexPage = () => {
       }, [cooldown]);
 
     return (
-        <div style={{position: "relative"}}>
+        <div style={containerStyles}>
               <AnimatePresence>
             {showingBigEmoji && (
                 <motion.div

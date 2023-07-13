@@ -87,7 +87,7 @@ def generate_qr_code():
         response_url = s3_client.generate_presigned_url(
             "get_object", 
             Params={
-                "Bucket": "sentiment-analysis-showcase-photos", 
+                "Bucket": "sentiment-analysis-images",
                 "Key": s3_filename
             }
         )
@@ -95,7 +95,7 @@ def generate_qr_code():
         qr_code = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
+            box_size=5,
         )
         qr_code.add_data(response_url)
         qr_code.make(fit=True)
