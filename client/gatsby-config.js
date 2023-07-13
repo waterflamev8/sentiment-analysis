@@ -6,9 +6,5 @@ module.exports = {
     title: `client`,
     siteUrl: `https://www.yourdomain.tld`,
   },
-  plugins: [],
-  proxy: {
-    prefix: '/api',
-    url: 'http://localhost:3000'
-  }
+  plugins: []
 }

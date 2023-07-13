@@ -11,28 +11,26 @@ export async function sendFrame(videoRef, canvasRef, setEmotionData, setBigEmoji
         const imageBlob = dataURLToBlob(frame); // Convert the frame to a Blob
 
         try {
-            const csrfRes = await axios.get("http://localhost:8000/api/generate_csrf_token");
-            const csrfToken = csrfRes.data.csrf_token;
+            const reader = new FileReader();
+            reader.readAsDataURL(imageBlob);
+            reader.onloadend = async function() {
+                const base64data = reader.result;
 
-            const formData = new FormData();
-            formData.append('image', imageBlob, 'image.jpeg');
+                const response = await axios.post("http://localhost:3000/api/process", { frame: base64data }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-            const response = await axios.post("http://localhost:8000/api/process", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'X-CSRFToken': csrfToken
-                },
-                withCredentials: true
-            });
+                setEmotionData(response.data);
 
-            setEmotionData(response.data);
+                const hasBigEmotion = response.data.big_emotion && response.data.big_emotion !== "CALM";
 
-            const hasBigEmotion = response.data.big_emotion && response.data.big_emotion !== "CALM";
-
-            if (hasBigEmotion && canTriggerBigEmoji) 
-            {
-                const frame = canvasRef.current.toDataURL('image/jpeg', 1.0);
-                setBigEmojiFrame(frame); 
+                if (hasBigEmotion && canTriggerBigEmoji) 
+                {
+                    const frame = canvasRef.current.toDataURL('image/jpeg', 1.0);
+                    setBigEmojiFrame(frame); 
+                }
             }
         } catch(error) {
             console.error("Error: ", error);
@@ -48,7 +46,7 @@ export async function initVideo(videoRef, canvasRef, setEmotionData, setBigEmoji
 
                 setInterval(() => {
                     sendFrame(videoRef, canvasRef, setEmotionData, setBigEmojiFrame, canTriggerBigEmoji);
-                }, 500);
+                }, 2000);
             })
             .catch(function(err) {
                 console.log("An error occurred: " + err);

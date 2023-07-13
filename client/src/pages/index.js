@@ -83,7 +83,10 @@ const IndexPage = () => {
 
     const [canTriggerBigEmoji, setCanTriggerBigEmoji] = useState(true);
     const [showingBigEmoji, setShowingBigEmoji] = useState(false);
-    const [bigEmojiImage, setBigEmojiImage] = useState(new Image());
+    // const [bigEmojiImage, setBigEmojiImage] = useState(new Image());
+    const isBrowser = typeof window !== "undefined";
+    const [bigEmojiImage, setBigEmojiImage] = useState(isBrowser ? new Image() : null);
+
 
     const [bigEmojiFrame, setBigEmojiFrame] = useState(null); 
     const [qrCodeImage, setQrCodeImage] = useState(null);
@@ -235,21 +238,19 @@ export async function getQrCode(frame) {
     const imageBlob = dataURLToBlob(frame); // Convert the frame to a Blob
 
     try {
-        const csrfRes = await axios.get("http://localhost:8000/api/generate_csrf_token");
-        const csrfToken = csrfRes.data.csrf_token;
+        const reader = new FileReader();
+        reader.readAsDataURL(imageBlob);
+        reader.onloadend = async function() {
+            const base64data = reader.result;
 
-        const formData = new FormData();
-        formData.append('image', imageBlob, 'image.jpeg');
+            const response = await axios.post("http://localhost:3000/api/generate_qr_code", { frame: base64data }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
 
-        const response = await axios.post("http://localhost:8000/api/generate_qr_code", formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'X-CSRFToken': csrfToken
-            },
-            withCredentials: true
-        });
-
-        return response.data.image; 
+            return response.data.image; 
+        }
     } catch(error) {
         console.error("Error: ", error);
     }
