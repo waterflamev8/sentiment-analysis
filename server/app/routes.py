@@ -79,7 +79,7 @@ def generate_qr_code():
 
         s3_client.put_object(
             Body=image_bytes, 
-            Bucket="sentiment-analysis-showcase-photos", 
+            Bucket="sentiment-analysis-images", 
             Key=s3_filename, 
             ContentType="image/jpg"
         )

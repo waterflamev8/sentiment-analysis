@@ -1,30 +1,7 @@
 import axios from "axios"
+import { dataURLToBlob } from "../api/imageFuncs";
 
-function dataURLToBlob(dataURL) 
-{
-    const BASE64_MARKER = ';base64,';
-    if (dataURL.indexOf(BASE64_MARKER) === -1) {
-        const parts = dataURL.split(',');
-        const contentType = parts[0].split(':')[1];
-        const raw = decodeURIComponent(parts[1]);
-
-        return new Blob([raw], { type: contentType });
-    }
-
-    const parts = dataURL.split(BASE64_MARKER);
-    const contentType = parts[0].split(':')[1];
-    const raw = window.atob(parts[1]);
-    const rawLength = raw.length;
-    const uInt8Array = new Uint8Array(rawLength);
-
-    for (let i = 0; i < rawLength; ++i) {
-        uInt8Array[i] = raw.charCodeAt(i);
-    }
-
-    return new Blob([uInt8Array], { type: contentType });
-}
-
-export async function sendFrame(videoRef, canvasRef, setEmotionData) {
+export async function sendFrame(videoRef, canvasRef, setEmotionData, setBigEmojiFrame) {
     if(videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
         canvasRef.current.width = videoRef.current.videoWidth;
         canvasRef.current.height = videoRef.current.videoHeight;
@@ -49,21 +26,29 @@ export async function sendFrame(videoRef, canvasRef, setEmotionData) {
             });
 
             setEmotionData(response.data);
+
+            const hasBigEmotion = response.data.big_emotion && response.data.big_emotion !== "CALM";
+
+            if (hasBigEmotion) 
+            {
+                const frame = canvasRef.current.toDataURL('image/jpeg', 1.0);
+                setBigEmojiFrame(frame); 
+            }
         } catch(error) {
             console.error("Error: ", error);
         }
     }
 }
 
-export async function initVideo(videoRef, canvasRef, formRef, setEmotionData) {
+export async function initVideo(videoRef, canvasRef, setEmotionData, setBigEmojiFrame) {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function(stream) {
                 videoRef.current.srcObject = stream;
 
                 setInterval(() => {
-                    sendFrame(videoRef, canvasRef, setEmotionData);
-                }, 500);             
+                    sendFrame(videoRef, canvasRef, setEmotionData, setBigEmojiFrame);
+                }, 500);
             })
             .catch(function(err) {
                 console.log("An error occurred: " + err);

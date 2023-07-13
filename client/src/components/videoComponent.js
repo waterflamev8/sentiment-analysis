@@ -14,29 +14,18 @@ const canvasStyles = {
     display: "none",
 };
 
-const VideoComponent = ({ setEmotionData }) => {
+const VideoComponent = ({ setEmotionData, setBigEmojiFrame }) => {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-    const formRef = useRef(null);
 
     useEffect(() => {
-        initVideo(videoRef, canvasRef, formRef, setEmotionData);
+        initVideo(videoRef, canvasRef, setEmotionData, setBigEmojiFrame);
     }, []);
 
     return (
         <div>
-            {/* width of video should be 100% */}
             <video ref={videoRef} autoPlay={true} style={videoStyles} />
             <canvas ref={canvasRef} style={canvasStyles} />
-
-            <form ref={formRef} style={{ display: "none" }}>
-                <input
-                    type="hidden"
-                    id="csrf_token"
-                    name="csrf_token"
-                    value=""
-                />
-            </form>
         </div>
     );
 };

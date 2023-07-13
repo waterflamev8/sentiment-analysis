@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
+import axios from "axios"
+import { dataURLToBlob } from "../api/imageFuncs";
 import Snowfall from 'react-snowfall'
 import "../styles/global.css";
 
@@ -78,11 +80,14 @@ const IndexPage = () => {
     const [showingBigEmoji, setShowingBigEmoji] = useState(false);
     const [bigEmojiImage, setBigEmojiImage] = useState(new Image());
 
+    const [bigEmojiFrame, setBigEmojiFrame] = useState(null); 
+    const [qrCodeImage, setQrCodeImage] = useState(null);
+
     const [cooldown, setCooldown] = useState(0);
 
-    useEffect(() => {
-        TriggerBigEmoji();
-    }, [emotionData]);
+    // useEffect(() => {
+    //     TriggerBigEmoji();
+    // }, [emotionData]);
 
     useEffect(() => {
         console.log ("canTriggerBigEmoji", canTriggerBigEmoji)
@@ -92,22 +97,47 @@ const IndexPage = () => {
         console.log ("showingBigEmoji", showingBigEmoji)
     }, [showingBigEmoji]);
 
-    const TriggerBigEmoji = () => {
-        if (canTriggerBigEmoji && emotionData.big_emotion && emotionData.big_emotion !== "CALM") {
-            console.log ("emotionData.big_emotion", emotionData.big_emotion)
+    useEffect(() => {
+        if (canTriggerBigEmoji && bigEmojiFrame) {
+            console.log ("HAS BIG EMOTION, GETTING QR CODE")
+            const getQrCode = async () => 
+            {
+                setCanTriggerBigEmoji(false);
 
-            let newImage = new Image();
-            newImage.src = getImage(emotionData, bigEmojiImage);
-            setBigEmojiImage(newImage);
-    
-            setShowingBigEmoji(true);
-            setTimeout(() => { setShowingBigEmoji(false); }, 5000);
-    
-            setCanTriggerBigEmoji(false);
-            setCooldown(10);
-            setTimeout(() => { setCanTriggerBigEmoji(true); }, 10000);
+                const qrCode = await getQrCodeFunc(bigEmojiFrame);
+                setQrCodeImage(qrCode);
+                
+                let newImage = new Image();
+                newImage.src = getImage(emotionData, bigEmojiImage);
+                setBigEmojiImage(newImage);
+
+                setShowingBigEmoji(true);
+                setTimeout(() => { setShowingBigEmoji(false); }, 5000);
+
+                setCooldown(10);
+                setTimeout(() => { setCanTriggerBigEmoji(true); }, 10000);
+            }
+
+            getQrCode();
         }
-    }
+    }, [bigEmojiFrame]); 
+
+    // const TriggerBigEmoji = () => {
+    //     if (canTriggerBigEmoji && emotionData.big_emotion && emotionData.big_emotion !== "CALM") {
+    //         console.log ("emotionData.big_emotion", emotionData.big_emotion)
+
+    //         let newImage = new Image();
+    //         newImage.src = getImage(emotionData, bigEmojiImage);
+    //         setBigEmojiImage(newImage);
+    
+    //         setShowingBigEmoji(true);
+    //         setTimeout(() => { setShowingBigEmoji(false); }, 5000);
+    
+    //         setCanTriggerBigEmoji(false);
+    //         setCooldown(10);
+    //         setTimeout(() => { setCanTriggerBigEmoji(true); }, 10000);
+    //     }
+    // }
 
     useEffect(() => {
         if (cooldown > 0) {
@@ -129,11 +159,12 @@ const IndexPage = () => {
             </nav>
             <div style={contentContainerStyles}>
                 <CardComponent header="Video" width="75%">
-                    <VideoComponent setEmotionData={setEmotionData} />
+                    <VideoComponent setEmotionData={setEmotionData} setBigEmojiFrame={setBigEmojiFrame} />
                 </CardComponent>
                 <CardComponent header="Emotions" width="25%">
                     <EmotionsComponent data={emotionData} />
                 </CardComponent>
+                { qrCodeImage && <img src={`data:image/png;base64,${qrCodeImage}`} alt="QR Code"/> }
             </div>
             <AnimatePresence>
                 {showingBigEmoji && (
@@ -190,5 +221,29 @@ const getImage = (emotionData) =>
             return surprisedEmoji;
         default:
             return unknownEmoji;
+    }
+}
+
+export async function getQrCodeFunc(frame) {
+    const imageBlob = dataURLToBlob(frame); // Convert the frame to a Blob
+
+    try {
+        const csrfRes = await axios.get("http://localhost:8000/api/generate_csrf_token");
+        const csrfToken = csrfRes.data.csrf_token;
+
+        const formData = new FormData();
+        formData.append('image', imageBlob, 'image.jpeg');
+
+        const response = await axios.post("http://localhost:8000/api/generate_qr_code", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'X-CSRFToken': csrfToken
+            },
+            withCredentials: true
+        });
+
+        return response.data.image; 
+    } catch(error) {
+        console.error("Error: ", error);
     }
 }
