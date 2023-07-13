@@ -7,7 +7,6 @@ const videoStyles = {
     objectFit: "cover",
     borderRadius: 10,
     transform: "scaleX(-1)", // Flip the video
-    // vertically align with parent div
 };
 
 const canvasStyles = {

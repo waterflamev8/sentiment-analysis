@@ -9,6 +9,7 @@ import awsLogo from "../images/awsLogo.png";
 import VideoComponent from "../components/videoComponent";
 import CardComponent from "../components/cardComponent";
 import EmotionsComponent from "../components/EmotionsComponent";
+import BigEmojiPanel from "../components/bigEmojiPanel";
 
 import angryEmoji from "../images/angryEmoji.svg";
 import calmEmoji from "../images/calmEmoji.svg";
@@ -49,17 +50,17 @@ const logoTextStyles = {
     fontFamily: "Roboto, sans-serif",
 };
 
-const cooldownTextStyles = {
-    color: "var(--text)", 
-    fontSize: 25, 
-    marginRight: 10 
-}
-
 const contentContainerStyles = {
     display: "flex",
     justifyContent: "space-between",
     padding: 40,
 };
+
+const cooldownTextStyles = {
+    color: "var(--text)",
+    fontSize: 25,
+    marginRight: 10
+}
 
 const fadeInOut = {
     hidden: { opacity: 0 },
@@ -85,10 +86,6 @@ const IndexPage = () => {
 
     const [cooldown, setCooldown] = useState(0);
 
-    // useEffect(() => {
-    //     TriggerBigEmoji();
-    // }, [emotionData]);
-
     useEffect(() => {
         console.log ("canTriggerBigEmoji", canTriggerBigEmoji)
     }, [canTriggerBigEmoji]);
@@ -100,44 +97,30 @@ const IndexPage = () => {
     useEffect(() => {
         if (canTriggerBigEmoji && bigEmojiFrame) {
             console.log ("HAS BIG EMOTION, GETTING QR CODE")
-            const getQrCode = async () => 
+            const triggerBigEmoji = async () => 
             {
                 setCanTriggerBigEmoji(false);
-
-                const qrCode = await getQrCodeFunc(bigEmojiFrame);
+    
+                const qrCode = await getQrCode(bigEmojiFrame);
                 setQrCodeImage(qrCode);
                 
                 let newImage = new Image();
-                newImage.src = getImage(emotionData, bigEmojiImage);
-                setBigEmojiImage(newImage);
-
-                setShowingBigEmoji(true);
-                setTimeout(() => { setShowingBigEmoji(false); }, 5000);
-
+    
+                newImage.onload = () => {
+                    setBigEmojiImage(newImage);
+                    setShowingBigEmoji(true);
+                    setTimeout(() => { setShowingBigEmoji(false); }, 5000);
+                }
+    
+                newImage.src = getImage(emotionData);
+    
                 setCooldown(10);
                 setTimeout(() => { setCanTriggerBigEmoji(true); }, 10000);
             }
-
-            getQrCode();
+    
+            triggerBigEmoji();
         }
-    }, [bigEmojiFrame]); 
-
-    // const TriggerBigEmoji = () => {
-    //     if (canTriggerBigEmoji && emotionData.big_emotion && emotionData.big_emotion !== "CALM") {
-    //         console.log ("emotionData.big_emotion", emotionData.big_emotion)
-
-    //         let newImage = new Image();
-    //         newImage.src = getImage(emotionData, bigEmojiImage);
-    //         setBigEmojiImage(newImage);
-    
-    //         setShowingBigEmoji(true);
-    //         setTimeout(() => { setShowingBigEmoji(false); }, 5000);
-    
-    //         setCanTriggerBigEmoji(false);
-    //         setCooldown(10);
-    //         setTimeout(() => { setCanTriggerBigEmoji(true); }, 10000);
-    //     }
-    // }
+    }, [bigEmojiFrame]);     
 
     useEffect(() => {
         if (cooldown > 0) {
@@ -148,6 +131,34 @@ const IndexPage = () => {
 
     return (
         <div>
+            <AnimatePresence>
+                {showingBigEmoji && (
+                    <motion.div
+                        variants={fadeInOut}
+                        initial="hidden"
+                        animate="show"
+                        exit="exit"
+                    >
+                        <Snowfall
+                            color="white"
+                            style={{ 
+                                position: 'fixed',
+                                width: '100vw',
+                                height: '100vh',
+                                zIndex: 100,
+                            }}
+                            radius={[50, 400]}
+                            rotationSpeed={[-1, 1]}
+                            speed={[20, 40]}
+                            wind={[-0.5, 2]}
+                            snowflakeCount={20}
+                            images={[bigEmojiImage]} 
+                        />
+                    </motion.div>
+                )}
+                { !canTriggerBigEmoji && <BigEmojiPanel frameImage={bigEmojiFrame} qrCodeImage={qrCodeImage} timer={cooldown} /> }
+            </AnimatePresence>
+
             <nav style={navBarStyles}>
                 <div style={logoContainerStyles}>
                     <img src={awsLogo} style={awsLogoStyles} alt="AWS Logo" />
@@ -164,34 +175,7 @@ const IndexPage = () => {
                 <CardComponent header="Emotions" width="25%">
                     <EmotionsComponent data={emotionData} />
                 </CardComponent>
-                { qrCodeImage && <img src={`data:image/png;base64,${qrCodeImage}`} alt="QR Code"/> }
             </div>
-            <AnimatePresence>
-                {showingBigEmoji && (
-                    <motion.div
-                        variants={fadeInOut}
-                        initial="hidden"
-                        animate="show"
-                        exit="exit"
-                    >
-                        <Snowfall
-                            color="white"
-                            style={{ 
-                                position: 'fixed',
-                                width: '100vw',
-                                height: '100vh'
-                            }}
-                            radius={[50, 400]}
-                            rotationSpeed={[-1, 1]}
-                            speed={[20, 40]}
-                            wind={[-0.5, 2]}
-                            snowflakeCount={20}
-                            images={[bigEmojiImage]} 
-                        />
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
         </div>
     );
 };
@@ -224,7 +208,7 @@ const getImage = (emotionData) =>
     }
 }
 
-export async function getQrCodeFunc(frame) {
+export async function getQrCode(frame) {
     const imageBlob = dataURLToBlob(frame); // Convert the frame to a Blob
 
     try {
