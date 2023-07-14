@@ -244,7 +244,8 @@ export function getQrCode(frame) {
             const base64data = reader.result;
 
             try {
-                const response = await axios.post("http://localhost:3000/generate_qr_code", { frame: base64data }, {
+                const response = await axios.post("http://sentiment-analysis-server-v3-env.eba-izpdqp2g.ap-southeast-1.elasticbeanstalk.com/generate_qr_code", { frame: base64data }, {
+                // const response = await axios.post("http://localhost:3000/generate_qr_code", { frame: base64data }, {
                     headers: {
                         'Content-Type': 'application/json'
                     }

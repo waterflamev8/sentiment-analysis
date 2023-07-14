@@ -43,10 +43,7 @@ const BigEmojiPanel = ({ frameImage, qrCodeImage, timer }) => {
             fontSize: 45, 
         }
     };
-
-    console.log ("LOOK HERE")
-    console.log (qrCodeImage)
-
+    
     return (
         <div style={styles.panel}>
             <p style={styles.cooldownTextStyles}>Counting: {timer}</p>
@@ -55,7 +52,7 @@ const BigEmojiPanel = ({ frameImage, qrCodeImage, timer }) => {
                     <img src={frameImage} alt="Big Emoji" style={styles.frameImage} />
                 </CardComponent>
                 <CardComponent header="QR Code" width="670px">
-                    <img src={`data:image/png;base64,${qrCodeImage}`} alt="QR Code" style={styles.qrCodeImage} />
+                    <img src={qrCodeImage} alt="QR Code" style={styles.qrCodeImage} />
                 </CardComponent>
             </div>
         </div>

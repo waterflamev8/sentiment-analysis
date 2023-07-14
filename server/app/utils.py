@@ -12,25 +12,6 @@ def find_emotion(emotions, emotionScore):
 
     return (num, emotionScore)
 
-
-# def find_general_emotion(emotions, total):
-#     general_sentiment = None
-#     count = 0
-
-#     if total == 0:
-#         return ("None", "0%")
-
-#     for emotion, num in emotions.items():
-#         if num > count:
-#             count = num
-#             general_sentiment = emotion
-
-#     # Percentage of main emotions in 3 s.f.
-#     percentage = f"{(count / total) * 100:.3g}%"
-
-#     return (general_sentiment, percentage, total)
-
-
 def process_result(result):
     faces = result["FaceDetails"]
     emotions = {}
