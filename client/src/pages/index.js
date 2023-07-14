@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
-import axios from "axios"
 import { dataURLToBlob } from "../api/imageFuncs";
 import Snowfall from 'react-snowfall'
 import "../styles/global.css";
-
+import axios from "axios"
 import awsLogo from "../images/awsLogo.png";
 import VideoComponent from "../components/videoComponent";
 import CardComponent from "../components/cardComponent";
 import EmotionsComponent from "../components/EmotionsComponent";
 import BigEmojiPanel from "../components/bigEmojiPanel";
-
 import angryEmoji from "../images/angryEmoji.svg";
 import calmEmoji from "../images/calmEmoji.svg";
 import confusedEmoji from "../images/confusedEmoji.svg";
@@ -244,8 +242,7 @@ export function getQrCode(frame) {
             const base64data = reader.result;
 
             try {
-                const response = await axios.post("http://sentiment-analysis-server-v3-env.eba-izpdqp2g.ap-southeast-1.elasticbeanstalk.com/generate_qr_code", { frame: base64data }, {
-                // const response = await axios.post("http://localhost:3000/generate_qr_code", { frame: base64data }, {
+                const response = await axios.post(`/generate_qr_code`, { frame: base64data }, {
                     headers: {
                         'Content-Type': 'application/json'
                     }

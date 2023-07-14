@@ -72,13 +72,10 @@ function processResult(result) {
     return [emotions, averageEmotionScore];
 }
 
-// app.get("/", (req, res) => {
-//     res.send("Hello World!");
-// });
-
 app.use("/", serveStatic(path.join(__dirname, 'public')))
 
-app.post("/process", async (req, res) => {
+app.post("/process", async (req, res) => 
+{
     let { frame } = req.body;
     const image_data = frame.split(',')[1];
     let imageBytes = Buffer.from(image_data, 'base64');
@@ -94,7 +91,7 @@ app.post("/process", async (req, res) => {
     let bigEmotion = null;
     let topEmotion = Object.keys(avgScore)[0];  // Top emotion will always be first element
 
-    if (rekognitionResult["FaceDetails"].length > 0) {
+    if (rekognitionResult["FaceDetails"].length > 1) {
         if (topEmotion == "HAPPY" && avgScore[topEmotion] > 96) {
             bigEmotion = topEmotion;
         } else if (topEmotion == "SAD" && avgScore[topEmotion] > 75) {
