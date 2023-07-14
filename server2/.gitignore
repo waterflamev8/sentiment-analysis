@@ -1,0 +1,6 @@
+.env
+/node_modules
+# all zip files
+*.zip
+# public folder
+/public

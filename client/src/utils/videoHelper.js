@@ -16,14 +16,12 @@ export async function sendFrame(videoRef, canvasRef, setEmotionData, setBigEmoji
             reader.onloadend = async function() {
                 const base64data = reader.result;
 
-                const response = await axios.post("http://localhost:3000/process", { frame: base64data }, {
+                const response = await axios.post(`/process`, { frame: base64data }, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
                 
-                console.log (response)
-
                 setEmotionData(response.data);
 
                 const hasBigEmotion = response.data.big_emotion && response.data.big_emotion !== "CALM";

@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
     "framer-motion": "^10.12.18",
     "gatsby": "^5.11.0",
     "react": "^18.2.0",
